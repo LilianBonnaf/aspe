@@ -1,3 +1,6 @@
+# Charger les fonctions utilitaires 
+source("R/ggplot_compat.R")
+
 #' Graphique de la série chronologique des IPR
 #'
 #' La fonction utilise les référentiel "classe_ipr" et "classe_ipr_plus" de la base Aspe qui doivent
@@ -121,14 +124,14 @@ gg_temp_metriq <- function(df_metriques,
 
   {
     plot_ipr_station <- plot_ipr_station +
-      geom_line(
+      geom_line_compat(
         data = df_metriques,
         aes(
-          x = annee,
-          y = !!var_valeur_metrique,
-          col = !!var_nom_metrique,
-          group = !!var_nom_metrique
-        ), size = 1
+            x = annee,
+            y = !!var_valeur_metrique,
+            col = !!var_nom_metrique,
+            group = !!var_nom_metrique),
+        width = 1
       ) +
       geom_point(
         data = df_metriques,
