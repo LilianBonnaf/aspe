@@ -127,10 +127,11 @@ gg_temp_metriq <- function(df_metriques,
       geom_line_compat(
         data = df_metriques,
         aes(
-            x = annee,
-            y = !!var_valeur_metrique,
-            col = !!var_nom_metrique,
-            group = !!var_nom_metrique),
+          x = annee,
+          y = !!var_valeur_metrique,
+          col = !!var_nom_metrique,
+          group = !!var_nom_metrique
+        ),
         width = 1
       ) +
       geom_point(
