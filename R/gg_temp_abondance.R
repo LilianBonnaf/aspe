@@ -1,3 +1,6 @@
+# Charger les fonctions utilitaires 
+source("R/ggplot_compat.R")
+
 #' Graphique de la série chronologique des abondances ou densités par espèce
 #'
 #'
@@ -51,7 +54,7 @@ gg_temp_abondance <- function(df,
   densites %>%
     ggplot(aes(x = annee,
                y = !!var_abondance)) +
-    geom_line(size = 0.5) +
+    geom_line_compat(width = 0.5) + # <-- remplace geom_line(size = 0.5)
     labs(x = "",
          y = "") +
     facet_wrap(vars(!!var_espece),
