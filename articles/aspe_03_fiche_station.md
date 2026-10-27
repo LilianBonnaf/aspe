@@ -12,6 +12,7 @@ dans les autres vignettes.
 ## Activation des packages et chargement des données
 
 ``` r
+
 library(aspe)
 library(tidyr)
 library(ggplot2)
@@ -20,6 +21,7 @@ library(dplyr)
 ```
 
 ``` r
+
 misc_charger_donnees_test()
 # load(file = "../../../raw_data/rdata/tables_sauf_mei_2023_04_07_09_39_32.RData")
 ```
@@ -32,6 +34,7 @@ On choisit ici à titre d’exemple la station avec le `sta_id` 10925, Le
 Trieux à Plésidy.
 
 ``` r
+
 aspe <- aspe::mef_creer_passerelle() %>% 
   filter(sta_id == 10844) %>% 
   mef_ajouter_ope_date() %>% # ajout de la date
@@ -42,6 +45,7 @@ aspe <- aspe::mef_creer_passerelle() %>%
 Agrégation des captures à l’opération et calcul de la densité.
 
 ``` r
+
 ope_capt <- aspe %>%  
   group_by(sta_id,
            pop_id,
@@ -62,6 +66,7 @@ ope_capt <- aspe %>%
 ### Dynamique du peuplement
 
 ``` r
+
 aspe::gg_temp_peuplement(df = ope_capt, var_id_sta = pop_id, var_libelle_sta = pop_libelle)
 ```
 
@@ -74,6 +79,7 @@ aspe::gg_temp_peuplement(df = ope_capt, var_id_sta = pop_id, var_libelle_sta = p
 #### Construction du tableau
 
 ``` r
+
 ipr_station <- aspe %>%
   select(ope_id,
          annee,
@@ -90,6 +96,7 @@ sert à ajouter le code couleur qui convient à chaque classe de qualité
 en vue de produire ’arrière-plan du graphique.
 
 ``` r
+
 classe_ipr <- classe_ipr %>% 
   ip_completer_classes_couleur()
 ```
@@ -98,6 +105,7 @@ On produit ensuite le graphique avec la fonction
 [`gg_temp_ipr()`](https://pascalirz.github.io/aspe/reference/gg_temp_ipr.md).
 
 ``` r
+
 gg_temp_ipr(df_ipr = ipr_station,
             var_id_sta = pop_libelle,
             var_ipr = ipr,
@@ -112,6 +120,7 @@ gg_temp_ipr(df_ipr = ipr_station,
 #### Construction du tableau
 
 ``` r
+
 metriques_station <- aspe %>%
   select(ope_id,
          annee,
@@ -133,6 +142,7 @@ constitutives de l’IPR et de bien visualiser celles qui sont
 déclassantes.
 
 ``` r
+
 gg_temp_metriq(
   df_metriques = metriques_station,
   var_id_sta = pop_libelle,
@@ -149,6 +159,7 @@ On peut préférer la fonction
 pour mieux visualiser les tendances par métrique.
 
 ``` r
+
 gg_temp_metriq_grille(
   df_metriques = metriques_station,
   var_id_sta = pop_libelle,
@@ -176,6 +187,7 @@ d’une opération de pêche à une autre :
 - Mise dans l’ordre souhaité des variables à représenter
 
 ``` r
+
 env_station <- aspe %>%
   select(pop_id,
          ope_id,
@@ -198,6 +210,7 @@ env_station <- aspe %>%
 Calul des moyennes interannuelles par variable.
 
 ``` r
+
 moyennes <- env_station %>% 
   group_by(variable) %>% 
   summarise(moyenne = mean(valeur, na.rm = TRUE))
@@ -206,6 +219,7 @@ moyennes <- env_station %>%
 ### Présentation graphique
 
 ``` r
+
 ggplot(data = env_station,
        aes(x = annee,
            y = valeur)) +

@@ -22,6 +22,7 @@ Les dataframes correspondant à chacune des tables de la base.
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 imp_importer_dump_sql(fichier_dump = "../raw_data/dump.sql")
 } # }

@@ -31,6 +31,7 @@ Charger le package [aspe](https://github.com/PascalIrz/aspe/),
 téléchargeable depuis GitHub :
 
 ``` r
+
 install.packages("devtools")
 devtools::install_github("pascalirz/aspe")
 ```
@@ -42,6 +43,7 @@ le [CRAN](https://cran.r-project.org/).
 … et des autres qui sont nécessaires pour exécuter les scripts.
 
 ``` r
+
 # chargement packages
 library(aspe)
 library(dplyr)
@@ -61,6 +63,7 @@ Pour stocker les informations dans votre environnement `R`, vous pouvez
 procéder comme ceci :
 
 ``` r
+
 ## 1° - ouvrir le fichier de configuration de l'environnement R avec la fonction du package usethis (installer le package si nécessaire).
 usethis::edit_r_environ()
 
@@ -80,6 +83,7 @@ Au redémarrage, vérifier les informations stockées en tapant ces lignes
 suivantes :
 
 ``` r
+
 ## 3° - ces informations doivent être visibles dans la console R :
 Sys.getenv('BDD_IDG_HOST')
 Sys.getenv('BDD_IDG_LOGIN')
@@ -99,6 +103,7 @@ En pratique, il faut d’abord (i) se connecter à la base de l’IDG, puis
 Deux fonctions facilitent le processus :
 
 ``` r
+
 # connexion à l'IDG
 # ! veillez à disposer des informations de connexion et un droit d'accès
 aspe_db <- imp_connecter_aspe_idg()
@@ -142,5 +147,6 @@ celui-ci n’est pas pré-existant, il est créé.
 > `export_tables_rdata(n_fichiers_mei = 2)`.
 
 ``` r
+
 export_tables_rdata()
 ```

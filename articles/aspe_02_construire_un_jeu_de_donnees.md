@@ -12,6 +12,7 @@ données classique. Pour le détail de la structure de la base, voir [Irz
 ### Activation des packages et chargement des données
 
 ``` r
+
 library(aspe)
 library(dplyr)
 library(stringr)
@@ -24,6 +25,7 @@ individuelles et l’autre pour l’ensemble des autres tables. Seul ce
 dernier est utilisé ici.
 
 ``` r
+
 misc_charger_donnees_test()
 ```
 
@@ -34,6 +36,7 @@ les identifiants des tables principales de la base. La description des
 tables est fournie dans l’article cité ci-dessus.
 
 ``` r
+
 passerelle <- aspe::mef_creer_passerelle()
 ```
 
@@ -73,6 +76,7 @@ Cette sélection est simple car la base contient l’information du
 département associé à chaque point de prélèvement.
 
 ``` r
+
 aspe_22 <- passerelle %>% 
   mef_ajouter_dept() %>% 
   filter(dept == "22")
@@ -108,6 +112,7 @@ jointure avec la table `ref_type_projection` qui fait la correspondence
 entre les codes internes de la base et les numéros EPSG des CRS.
 
 ``` r
+
 pops <- point_prelevement %>%
   left_join(y = ref_type_projection,
             by = c("pop_typ_id" = "typ_id"))
@@ -118,6 +123,7 @@ uniquement les deux colonnes `X` et `Y` pour la longitude et la
 latitude.
 
 ``` r
+
 # coordonnées
 coords <- aspe::geo_convertir_coords_df(
   df = pops,
@@ -136,6 +142,7 @@ Création d’un objet géographique des points, de classe `sf` :
   la fonction `st_as_sf()`.
 
 ``` r
+
 # création d'un objet géographique
 pops_geo <- pops %>%
   cbind(coords) %>%
@@ -147,6 +154,7 @@ Le résultat peut être visualisé par exemple avec
 `mapview::mapview(pops_geo)`.
 
 ``` r
+
 mapview::mapview(pops_geo)
 ```
 
@@ -156,6 +164,7 @@ Avec les fonctions du package `sf`, on charge le shapefile, puis si
 besoin on le reprojette s’il n’a pas le même CRS que les points.
 
 ``` r
+
 bv_fichier <- "../raw_data/bassin.shp"
 
 mon_bv <- sf::read_sf(dsn = bv_fichier) %>% 
@@ -169,6 +178,7 @@ lesquels la jointure géographique a permis d’obtenir un attribut du
 bassin (ici la variable `ID`).
 
 ``` r
+
 pops_geo_bv <- pops_geo %>%
   sf::st_join(mon_bv) %>%
   filter(!is.na(ID)) %>% # suppression des lignes où ID est manquant
@@ -179,6 +189,7 @@ On collecte un vecteur contenant les identifiants `pop_id` des points
 localisés dans le bassin.
 
 ``` r
+
 pops_bv_ids <- pops_geo_bv %>%
   pull(pop_id)
 ```
@@ -189,6 +200,7 @@ La passerelle est filtrée pour ne retenir que les points de prélèvement
 localisés dans le polygone.
 
 ``` r
+
 aspe_sel <- passerelle %>% 
   filter(pop_id %in% pops_bv_ids)
 ```
@@ -201,6 +213,7 @@ Cette sélection est beaucoup plus simple qu’en spatial. Il suffit
 d’ajouter la date de l’opération puis de filtrer dessus. Par exemple :
 
 ``` r
+
 aspe_sel <- passerelle %>% 
   mef_ajouter_ope_date() %>% 
   filter(annee > 2008)
@@ -235,6 +248,7 @@ pour chaque lot de poissons de la même pêche donc on peut dédoublonner
 les lignes afin de n’avoir qu’une ligne par opération.
 
 ``` r
+
 aspe_ipr <- aspe_sel %>% 
   select(-pre_id, -lop_id) %>% 
   distinct() %>% # dédoublonnage
@@ -248,6 +262,7 @@ On rajoute les libellés des points de prélèvement et sélectionne
 uniquement les variables d’intérêt.
 
 ``` r
+
 aspe_ipr <- aspe_ipr %>%
   mef_ajouter_libelle() %>%
   select(sta_id:ope_id,
@@ -261,14 +276,14 @@ aspe_ipr <- aspe_ipr %>%
 
 Visualisation.
 
-| sta_id | pop_id | ope_id | pop_libelle                      | annee | ope_date   | ipr   | cli_libelle | ner  | nel  | nte  | dit  | dio  | dii  | dti  |
-|--------|--------|--------|----------------------------------|-------|------------|-------|-------------|------|------|------|------|------|------|------|
-| 10925  | 42959  | 51339  | Le Ruisseau de Loup à Plougonver | 2010  | 05/10/2010 | 6.36  | Bon         | 0.04 | 0.04 | 1.72 | 2.51 | 0.92 | 0.99 | 0.14 |
-| 10734  | 42437  | 51317  | Le Gouessant à Andel             | 2009  | 08/09/2009 | 19.16 | Moyen       | 1.10 | 1.76 | 3.83 | 3.16 | 6.84 | 0.84 | 1.63 |
-| 10647  | 42207  | 6648   | L'Arguenon à Dolo                | 2009  | 08/09/2009 | 10.72 | Bon         | 0.16 | 0.25 | 3.06 | 2.10 | 3.05 | 1.68 | 0.41 |
-| 10844  | 42704  | 6642   | TRIEUX à PLESIDY                 | 2009  | 16/10/2009 | 5.99  | Bon         | 0.17 | 0.47 | 2.09 | 0.98 | 0.57 | 0.98 | 0.72 |
-| 10734  | 42437  | 6676   | Le Gouessant à Andel             | 2010  | 29/09/2010 | 16.75 | Moyen       | 1.16 | 4.30 | 1.10 | 2.16 | 5.38 | 2.21 | 0.44 |
-| 10844  | 42704  | 6837   | TRIEUX à PLESIDY                 | 2013  | 01/10/2013 | 5.86  | Bon         | 0.14 | 0.07 | 1.69 | 1.69 | 0.55 | 1.13 | 0.58 |
+| sta_id | pop_id | ope_id | pop_libelle | annee | ope_date | ipr | cli_libelle | ner | nel | nte | dit | dio | dii | dti |
+|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
+| 10925 | 42959 | 51339 | Le Ruisseau de Loup à Plougonver | 2010 | 05/10/2010 | 6.36 | Bon | 0.04 | 0.04 | 1.72 | 2.51 | 0.92 | 0.99 | 0.14 |
+| 10734 | 42437 | 51317 | Le Gouessant à Andel | 2009 | 08/09/2009 | 19.16 | Moyen | 1.10 | 1.76 | 3.83 | 3.16 | 6.84 | 0.84 | 1.63 |
+| 10647 | 42207 | 6648 | L'Arguenon à Dolo | 2009 | 08/09/2009 | 10.72 | Bon | 0.16 | 0.25 | 3.06 | 2.10 | 3.05 | 1.68 | 0.41 |
+| 10844 | 42704 | 6642 | TRIEUX à PLESIDY | 2009 | 16/10/2009 | 5.99 | Bon | 0.17 | 0.47 | 2.09 | 0.98 | 0.57 | 0.98 | 0.72 |
+| 10734 | 42437 | 6676 | Le Gouessant à Andel | 2010 | 29/09/2010 | 16.75 | Moyen | 1.16 | 4.30 | 1.10 | 2.16 | 5.38 | 2.21 | 0.44 |
+| 10844 | 42704 | 6837 | TRIEUX à PLESIDY | 2013 | 01/10/2013 | 5.86 | Bon | 0.14 | 0.07 | 1.69 | 1.69 | 0.55 | 1.13 | 0.58 |
 
 Dans la même logique, il est possible d’enrichir le jeu de données avec
 les informations contenues dans les différentes tables au moyen des

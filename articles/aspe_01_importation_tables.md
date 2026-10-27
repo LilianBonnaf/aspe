@@ -36,12 +36,12 @@ disposant des éléments suivants - préférentiellement à installer dans
 cet ordre :
 
 1.  Le logiciel R dans une version récente (\>4.0)
-    $\Rightarrow$[télécharger](https://cran.r-project.org/bin/windows/base/R-4.0.3-win.exe)
+    $`\Rightarrow`$[télécharger](https://cran.r-project.org/bin/windows/base/R-4.0.3-win.exe)
 2.  L’IDE RStudio à peu près à jour
-    $\Rightarrow$[télécharger](https://download1.rstudio.org/desktop/windows/RStudio-1.3.1093.exe)
+    $`\Rightarrow`$[télécharger](https://download1.rstudio.org/desktop/windows/RStudio-1.3.1093.exe)
 3.  Les packages {devtools} et {roxygen2} (installables depuis Rstudio)
 4.  Pour les machines en Windows, Rtools 40 64 bits
-    $\Rightarrow$[télécharger](https://cran.r-project.org/bin/windows/Rtools/)
+    $`\Rightarrow`$[télécharger](https://cran.r-project.org/bin/windows/Rtools/)
 
 ## Chargement du package `{aspe}`
 
@@ -49,6 +49,7 @@ Une fois la machine configurée, le package est téléchargeable depuis
 Github :
 
 ``` r
+
 devtools::install_github("pascalirz/aspe")
 ```
 
@@ -61,6 +62,7 @@ le [CRAN](https://cran.r-project.org/).
 … et des autres qui sont nécessaires pour exécuter les scripts.
 
 ``` r
+
 library(aspe)
 library(dplyr)
 ```
@@ -72,6 +74,7 @@ library(dplyr)
 On importe la totalité de la base en une fois, ce qui est bien pratique.
 
 ``` r
+
 # chemin vers le dump
 file <- "C:/Users/pascal.irz/Documents/projets/ASPE/raw_data/aspe_dump_test_pour_datapaper.sql"
 
@@ -101,6 +104,7 @@ sauvegarde par défaut dans un sous-répertoire `/processed_data` du
 répertoire de travail. Si celui-ci n’est pas pré-existant, il est créé.
 
 ``` r
+
 export_tables_rdata()
 ```
 
@@ -125,6 +129,7 @@ stockées en format `.RData` :
 Ce découpage prend 5-10’.
 
 ``` r
+
 imp_scinder_dump(fichier_dump = "raw_data/aspe_20210908.sql.gz")
 ```
 
@@ -148,6 +153,7 @@ défaut celui où se trouve le fichier du `dump`) les deux fichiers
 Ensuite, on charge le fichier `.RData` souhaité.
 
 ``` r
+
 load(file = 'raw_data/lignes_autres_tables.RData')
 ```
 
@@ -160,6 +166,7 @@ directement au moyen de la fonction
 en renseignant l’argument `tables_a_extraire`.
 
 ``` r
+
 imp_tables_a_partir_des_lignes(lignes_dump = lignes_autres_tables,
                                tables_a_extraire = c("station", "facies"))
 ```
@@ -168,6 +175,7 @@ Si on ne les connaît pas, on peut les afficher avec la fonction
 [`imp_extraire_noms_tables()`](https://pascalirz.github.io/aspe/reference/imp_extraire_noms_tables.md)
 
 ``` r
+
 imp_extraire_noms_tables(lignes_dump = lignes_autres_tables)
 ```
 
@@ -175,6 +183,7 @@ imp_extraire_noms_tables(lignes_dump = lignes_autres_tables)
 ultérieurement.
 
 ``` r
+
 imp_tables_a_partir_des_lignes(lignes_dump = lignes_autres_tables)
 ```
 
@@ -193,6 +202,7 @@ défaut ces fichiers sont placés dans le sous-répertoire `processed_data`
 du répertoire de travail qui est créé s’il n’est pas pré-existant.
 
 ``` r
+
 aspe::export_tables_rdata()
 ```
 
@@ -202,6 +212,7 @@ voir plus clair, on peut effectuer une sélection avec la fonction
 installer si besoin.
 
 ``` r
+
 gdata::keep(operation,
             operation_ipr,
             station,
@@ -212,6 +223,7 @@ gdata::keep(operation,
 Pour ne sauvegarder que ces tables :
 
 ``` r
+
 save(operation,
      operation_ipr,
      station,
@@ -222,6 +234,7 @@ save(operation,
 Si l’on veut sauvegarder toutes les tables en csv :
 
 ``` r
+
 export_tables_csv(repertoire = "processed_data/csv")
 ```
 
