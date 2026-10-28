@@ -198,7 +198,17 @@ gg_temp_peuplement <- function(df,
         data = df_protocole,
         aes(x = annee, fill = Protocole)
       ) +
-      ggplot2::geom_line(y = 0.5,group=0,alpha=0.5,lty=1,size=0.2) +
+      {
+        if (utils::packageVersion("ggplot2") >= "3.4.0") {
+          ggplot2::geom_line(
+            y = 0.5, group = 0, alpha = 0.5, lty = 1, linewidth = 0.2
+          )
+        } else {
+          ggplot2::geom_line(
+            y = 0.5, group = 0, alpha = 0.5, lty = 1, size = 0.2
+          )
+        }
+      } +
       ggiraph::geom_point_interactive(
         ggplot2::aes(x = annee, tooltip = hover2, group=annee, fill = Protocole, shape = Protocole),
         y = 0.5,
