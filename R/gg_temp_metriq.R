@@ -66,6 +66,15 @@ gg_temp_metriq <- function(df_metriques,
                            df_classes = classe_ipr)
 
 {
+
+  # Vérification du type de graphique
+  if (!type_graphique %in% c("courbes", "barres")) {
+    stop(
+      "Le paramètre 'type_graphique' doit être égal à 'courbes' ou 'barres'.",
+      call. = FALSE
+    )
+  }
+  
   # sélection des données
   var_id_sta <- enquo(var_id_sta)
   var_nom_metrique <- enquo(var_nom_metrique)
